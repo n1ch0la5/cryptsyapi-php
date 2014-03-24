@@ -15,12 +15,6 @@ Download and include the crypstyapi.php class:
 require_once 'path/to/cryptsyapi.php';
 ~~~
 
-Or preferably install via [Composer](https://getcomposer.org/)
-
-~~~
-"crypstyapi-php/crypstyapi-php": "dev-master"
-~~~
-
 Instantiate the class and set your API key and API Secret.
 
 ~~~
