@@ -2,15 +2,14 @@
 
 /**
  * CryptsyAPI Wrapper
- * 
+ *
  * Requirements: cURL
- * 
+ *
  * @author Nicholas Johnson <the90sarealive@aol.com>
- * @version 0.1
- * 
+ *
  * Modeled after the DogeAPI Wrapper by Jackson Palmer
  */
- 
+
 class CryptsyAPI
 {
     private $keys = array();
@@ -29,13 +28,13 @@ class CryptsyAPI
         // Create a special nonce POST parameter with incrementing integer for the api
         $mt = explode( ' ', microtime() );
         $args['nonce'] = $mt[1];
-        
+
         // Turn method variable into an array
         if( ! is_array( $method ) )
         {
             $method = array($method);
         }
-        
+
         $count = count( $method );
         $curl_array = array();
         static $ch = null;
@@ -44,7 +43,7 @@ class CryptsyAPI
         foreach( $method as $count => $val )
         {
             $args['method'] = $val;
-           
+
             // Check for args and build query string
             if ( !empty($args) )
             {
@@ -52,7 +51,7 @@ class CryptsyAPI
             }
 
             $sign = hash_hmac("sha512", $post_data, $this->secret);
-           
+
             $headers = array(
             'Sign: '.$sign,
             'Key: '.$this->api_key
@@ -66,32 +65,32 @@ class CryptsyAPI
             curl_setopt($curl_array[$count], CURLOPT_POSTFIELDS, $post_data);
             curl_setopt($curl_array[$count], CURLOPT_HTTPHEADER, $headers);
             curl_setopt($curl_array[$count], CURLOPT_SSL_VERIFYPEER, FALSE);
-            
+
             curl_multi_add_handle( $ch, $curl_array[ $count ] );
         }
 
         // Execute the cURL request
         $running = NULL;
-        do { 
-            usleep(10000); 
-            curl_multi_exec( $ch,$running ); 
-        } while($running > 0); 
+        do {
+            usleep(10000);
+            curl_multi_exec( $ch,$running );
+        } while($running > 0);
 
         // Get the content
         foreach( $method as $count => $val )
         {
             $res[$count] = curl_multi_getcontent( $curl_array[$count] );
              curl_multi_remove_handle( $ch, $curl_array[$count] );
-        } 
+        }
         curl_multi_close($ch);
 
         if ($res === false) throw new Exception('Could not get reply: '.curl_error($curl_array[$count]));
         foreach($method as $count => $val)
         {
            $result[$count] = json_decode($res[$count], true);
-        } 
+        }
         if (!$result) throw new Exception('Invalid data received, please make sure connection is working and requested API exists');
-        
+
         return $result;
     }
 
@@ -110,20 +109,20 @@ class CryptsyAPI
     {
         return $this->_request('getinfo');
     }
-    
+
     // Array of all active markets
     public function get_markets()
     {
         return $this->_request('getmarkets');
     }
-    
+
     //last 1000 trades for a market.
     // Input: marketid i.e. get_market_trades( array( 'marketid' => 5 ));
     public function get_market_trades($args = array())
     {
         return $this->_request('markettrades', $args);
     }
-   
+
     // Returns a Buy Array and a Sell array for a market.
     // Input: marketid i.e. get_market_orders( array( 'marketid' => 5 ));
     public function get_market_orders($args = array())
@@ -132,7 +131,7 @@ class CryptsyAPI
     }
 
     // (Your) User trades by market.
-    // Inputs: marketid, limit (optional, default 200) 
+    // Inputs: marketid, limit (optional, default 200)
     public function get_my_trades( $args = array() )
     {
         return $this->_request('mytrades', $args);
@@ -151,7 +150,7 @@ class CryptsyAPI
         return $this->_request('myorders', $args);
     }
 
-    // Array of all open orders for your account. 
+    // Array of all open orders for your account.
     public function get_all_my_orders()
     {
         return $this->_request('allmyorders');

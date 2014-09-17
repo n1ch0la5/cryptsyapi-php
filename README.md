@@ -15,6 +15,12 @@ Download and include the crypstyapi.php class:
 require_once 'path/to/cryptsyapi.php';
 ~~~
 
+Or preferably install via [Composer](https://getcomposer.org/)
+
+~~~
+"cryptsyapi-php/cryptsyapi-php": "dev-master"
+~~~
+
 Instantiate the class and set your API key and API Secret.
 
 ~~~
@@ -24,7 +30,7 @@ $cryptsy = new CryptsyAPI($apiKeys);
 
 $info = $cryptsy->get_info();
 ~~~
-More examples in example.php
+More usage examples in example.php
 
 The wrapper abstracts most methods listed at https://www.cryptsy.com/pages/api using the same interface names. For example, to get your current open orders:
 

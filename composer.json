@@ -1,0 +1,13 @@
+{
+    "name": "cryptsyapi-php/cryptsyapi-php",
+    "description": "cryptsyapi-php API library",
+    "license": "MIT",
+    "keywords": ["cryptsy", "cryptsyapi"],
+    "type": "library",
+    "autoload": {
+            "psr-0": {"CryptsyAPI": "lib/"}
+        },
+    "require": {
+        "php": ">=5.2.0"
+    }
+}
